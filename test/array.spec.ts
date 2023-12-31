@@ -1,4 +1,6 @@
-import { OArray } from "src/datastructure";
+import { OArray } from "src";
+
+const CAPACITY = 5;
 
 describe('OArray', () => {
 
@@ -33,7 +35,7 @@ describe('OArray', () => {
         expect(array[4]).toBe(5);
       });
 
-      it('하나의 string 타입 요소를 같는 Items', () => {
+      it('하나의 string 타입 요소를 갖는 Items', () => {
         const array = new OArray("10");
         expect(array.capacity).toBe(1);
         expect(array).toHaveLength(1);
@@ -44,7 +46,6 @@ describe('OArray', () => {
 
   describe('Basic Spec', () => {
     describe('Capacity', () => {
-      const CAPACITY = 10;
       const array = new OArray(CAPACITY);
 
       it('get', () => {
@@ -62,7 +63,6 @@ describe('OArray', () => {
     });
 
     describe('Length', () => {
-      const CAPACITY = 5;
       const array = new OArray(CAPACITY);
 
       it('get', () => {
@@ -111,7 +111,6 @@ describe('OArray', () => {
     });
 
     describe('인덱스로 할당', () => {
-      const CAPACITY = 5;
       const array = new OArray(CAPACITY);
       const value = 10;
 
@@ -138,15 +137,14 @@ describe('OArray', () => {
     });
 
     describe("Iterable", () => {
-      const CAPACITY = 5;
       const array = new OArray(CAPACITY);
       let iterator = array[Symbol.iterator]();
-      it("Iterator 를 리턴함", () => {
+      it("Iterator", () => {
         expect(iterator).toBeDefined();
         expect(iterator[Symbol.iterator]()).toBe(iterator);
       });
 
-      it("Iterator 는 Length 만큼 next 로 반복함", () => {
+      it("Iterator 는 Length 만큼 next 를 반복가능", () => {
         expect(iterator.next()).toEqual({value: undefined, done: true});
         array.length = CAPACITY;
         iterator = array[Symbol.iterator]();
@@ -160,58 +158,76 @@ describe('OArray', () => {
     });
   });
 
-  describe('Ovveride Methods of Array', () => {
-    describe('Inserting. Length++', () => {
-      let CAPACITY = 5;
+  describe('Methods of Array', () => {
+    describe('Inserting', () => {
       let array: OArray<string>;
-      let ogLength: number;
+      const ogLength = CAPACITY - 2;
+      const elements = new Array(CAPACITY+1);
+      for (let i = 0; i < CAPACITY+1; i++) {
+        elements[i] = String.fromCharCode(97+i);
+      }
+
       beforeEach(() => {
         array = new OArray(CAPACITY);
-        array[0] = 'a';
-        array[1] = 'b';
-        array[2] = 'c';
-        ogLength = 3;
+        for (let i = 0; i < ogLength; i++) {
+          array[i] = elements[i]!;
+        }
         array.length = ogLength;
       });
+
       describe('push', () => {
         it('끝에 삽입', () => {
-          array.push('d');
-          expect(array[ogLength]).toBe('d');
+          const result = array.push(elements[ogLength]!);
+          expect(array[ogLength]).toBe(elements[ogLength]);
           expect(array.length).toBe(ogLength+1);
-
-          --array.length;
-          array.push('d', 'e');
-          expect(array[ogLength]).toBe('d');
-          expect(array[ogLength+1]).toBe('e');
-          expect(array.length).toBe(ogLength+2);
+          expect(result).toBe(ogLength+1);
         });
 
-        it('Capacity 를 벗어나는 삽입은 불가능', () => {
-          array.push('d');
-          array.push('e');
+        it('끝에 삽입 2', () => {
+          const result = array.push(elements[ogLength]!, elements[ogLength+1]!);
+          expect(array[ogLength]).toBe(elements[ogLength]);
+          expect(array[ogLength+1]).toBe(elements[ogLength+1]);
+          expect(array.length).toBe(ogLength+2);
+          expect(result).toBe(ogLength+2);
+        });
+
+        it('Capacity 를 벗어나는 삽입은 불가능 1', () => {
+          for (let i = ogLength; i < CAPACITY; i++) {
+            array.push(elements[i]!);
+          }
           expect(array.length).toBe(CAPACITY);
 
           let isError = false;
           (() => {
             try {
-              array.push('f');
+              array.push(elements[CAPACITY]!);
             } catch (e) {
               isError = true;
-              // 삽입 잔에 에러를 던져야한다
+              // 삽입 전에 에러를 던져야한다
               expect(Object.getOwnPropertyDescriptor(array, CAPACITY))
               .toBeUndefined();
             }
           })();
           expect(isError).toBe(true);
+        });
 
-          --array.length;
-          isError = false;
+        it('Capacity 를 벗어나는 삽입은 불가능 2', () => {
+          for (let i = ogLength; i < CAPACITY-1; i++) {
+            array.push(elements[i]!);
+          }
+          expect(array.length).toBe(CAPACITY-1);
+
+          let isError = false;
           (() => {
             try {
-              array.push('e', 'f');
+              array.push(elements[CAPACITY-1]!, elements[CAPACITY]!);
             } catch (e) {
               isError = true;
-              // 삽입 잔에 에러를 던져야한다
+              /* 일종의 트랜젝션 처럼, 일관성을 위해서,
+              Capacity 를 벗어나는 삽입 시도는 일부가 가능하더라도 전혀 삽입하지 않아야한다. */
+              expect(array.length).toBe(CAPACITY-1);
+              expect(Object.getOwnPropertyDescriptor(array, CAPACITY-1)?.value)
+              .toBeUndefined();
               expect(Object.getOwnPropertyDescriptor(array, CAPACITY))
               .toBeUndefined();
             }
@@ -220,16 +236,86 @@ describe('OArray', () => {
         });
       });
 
-      // unshift 앞에 삽입
+      describe('unshift', () => {
+        it('앞에 삽입 1', () => {
+          const result = array.unshift(elements[ogLength]!);
+          expect(array[0]).toBe(elements[ogLength]);
+          for (let i = 0; i < ogLength; i++) {
+            expect(array[i+1]).toBe(elements[i]);
+          }
+          expect(array.length).toBe(ogLength+1);
+          expect(result).toBe(ogLength+1);
+        });
+
+        it('앞에 삽입 2', () => {
+          const result = array.unshift(elements[ogLength]!, elements[ogLength+1]!);
+          expect(array[0]).toBe(elements[ogLength]);
+          expect(array[1]).toBe(elements[ogLength+1]);
+          for (let i = 0; i < ogLength; i++) {
+            expect(array[i+2]).toBe(elements[i]);
+          }
+          expect(array.length).toBe(ogLength+2);
+          expect(result).toBe(ogLength+2);
+        });
+
+        it('Capacity 를 벗어나는 삽입은 불가능 1', () => {
+          for (let i = ogLength; i < CAPACITY; i++) {
+            array.unshift(elements[i]!);
+          }
+          expect(array.length).toBe(CAPACITY);
+
+          let isError = false;
+          (() => {
+            try {
+              array.unshift(elements[CAPACITY]!);
+            } catch (e) {
+              isError = true;
+              // 삽입 전에 에러를 던져야한다
+              expect(Object.getOwnPropertyDescriptor(array, CAPACITY))
+              .toBeUndefined();
+            }
+          })();
+          expect(isError).toBe(true);
+        });
+
+        it('Capacity 를 벗어나는 삽입은 불가능 2', () => {
+          for (let i = ogLength; i < CAPACITY-1; i++) {
+            array.unshift(elements[i]!);
+          }
+          expect(array.length).toBe(CAPACITY-1);
+
+          let isError = false;
+          (() => {
+            try {
+              array.unshift(elements[CAPACITY-1]!, elements[CAPACITY]!);
+            } catch (e) {
+              isError = true;
+              /* 앞에 삽입은 리소스가 큰 작업이므로,
+              실재로 여러번 삽입하지 않고 한번에 처리하기 때문에
+              Capacity 를 벗어나면 전혀 삽입하지 않는다.
+              이 부분이 일관성을 해친다고 생각하기 때문에, push 의 수정이 필요할 것 같다. */
+              expect(array.length).toBe(CAPACITY-1);
+              expect(Object.getOwnPropertyDescriptor(array, 0)?.value)
+              .toBe(elements[CAPACITY-2]);
+              expect(Object.getOwnPropertyDescriptor(array, CAPACITY-1)?.value)
+              .toBeUndefined();
+              expect(Object.getOwnPropertyDescriptor(array, CAPACITY))
+              .toBeUndefined();
+            }
+          })();
+          expect(isError).toBe(true);
+        });
+      });
       // splice 중간에 삽입
     });
     
-    describe('Deleting. Length--', () => {
+    describe('Deleting', () => {
       // pop 끝에서 삭제
       // shift 앞에서 삭제
       // splice 중간에서 삭제
     });
 
-    // Todo: 그 밖의 테스트 해야될것같거나 문제가 발견된 모든 매서드에 대한 테스트 작성하기
+    // Todo: 그 밖의 테스트 해야될것같거나 문제가 발견된 매서드에 대한 테스트 작성하고, 최종적으로 모든 메서드에 대한 테스트 가지기.
+    // Todo: 퍼포먼스 테스트 해보기. (capacity 와 length 의 개념이 변하면서 퍼포먼스에서 이득을 볼 여지가 있지않을까?)
   });
 });

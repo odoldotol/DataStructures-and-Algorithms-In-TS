@@ -69,6 +69,8 @@ export class OArray<T>
           throw new Error('Length must be less than capacity.');
         }
 
+        // Todo: length 를 벗어나는 인덱스에 할당시에, 추후 해당 인덱스에 접근이 가능하도록 length 를 늘려주는것이 필요한가?
+
         return Reflect.set(target, prop, value, receiver);
       }
     });
@@ -91,9 +93,26 @@ export class OArray<T>
     this.LENGTH = value;
   }
 
-  // Todo: 문제가 발견된 모든 Array 매서드 오버라이드 하기.
+  /**
+   * @param items New elements to add to the array.
+   * @OArray Throws an error if the new length exceeds the capacity.
+   */
+  public override push(...items: T[]): number {
+    /* 일종의 트랜젝션 처럼, 일관성을 위해서,
+    Capacity 를 벗어나는 삽입 시도는 일부가 가능하더라도 전혀 삽입하지 않아야한다. */
+    if (this.LENGTH + items.length > this.CAPACITY) {
+      throw new Error('New length will exceed the capacity.');
+    }
+    return super.push(...items);
+  }
 
-  // Todo: 퍼포먼스적으로 오버라이드 해야하는 메서드 테스트 해보기.
+  /**
+   * @param items Elements to insert at the start of the array.
+   * @OArray Throws an error if the new length exceeds the capacity.
+   */
+  public override unshift(...items: T[]): number {
+    return super.unshift(...items);
+  }
 
   /**
    * @OArray Method not implemented.
