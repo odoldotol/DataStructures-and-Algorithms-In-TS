@@ -6,6 +6,7 @@ export class OArray<T>
   private readonly CAPACITY: number;
   private LENGTH: number;
 
+  // Todo: 모호함을 제거하기위해, capacity 를 인자로 받는 생성만 허용하고 Items 를 인자로 받는 생성은 허용하지 말아야 할까?
   constructor(capacity: number);
   constructor(...items: T[]);
   constructor(...args: any[]) {
@@ -60,7 +61,9 @@ export class OArray<T>
       },
 
       set: (target, prop, value, receiver) => {
+        // length 와 value 의 할당 부분은 기존 Array 매서드와의 호환성에 영향을 줄 수 있으므로 최대힌 적게 수정하는 방향으로 진행해야한다. 만약 수정해야한다면 호환성에 최대한 적게 영향을 주는 방향으로 진행해야한다.
         if (prop === 'length') {
+          // Todo: length 를 줄일때, 사용하지 않는 인덱스에 undefined 를 여기서 직접 할당해줘야할까? 그렇지 않으면 다시 length 를 늘렸을때 이전에 할당된 값이 남아있을텐데? 이것이 length 수정의 의도된 결과여도 되는가?
           receiver.LENGTH = value;
           return true;
         }
@@ -69,7 +72,7 @@ export class OArray<T>
           throw new Error('Length must be less than capacity.');
         }
 
-        // Todo: length 를 벗어나는 인덱스에 할당시에, 추후 해당 인덱스에 접근이 가능하도록 length 를 늘려주는것이 필요한가?
+        // Todo: length 를 벗어나는 인덱스에 할당시에, 추후 해당 인덱스에 접근이 가능하도록 length 를 늘려주는것이 필요한가? 또는 length 를 벗어나는 할당을 막아야 할까?
 
         return Reflect.set(target, prop, value, receiver);
       }
