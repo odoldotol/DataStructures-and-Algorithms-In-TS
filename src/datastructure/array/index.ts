@@ -3,8 +3,16 @@ import { isPositiveInteger } from 'src/utill'
 export class OArray<T>
   extends Array<T>
 {
+  /* 기존 JS Array 의 length 의 개념보다 더 좁은 의미의 length 개념 + Capacity 개념을 사용할 것이다.
+  기존 length 를 변경할 때 일어나는 delete 작업 등등 은 피해야 한다.
+  Capacity 를 정의해야한다. (기존 length 를 CAPACITY 로 사용하는 방법도 있음)
+  
+  가장 직관적인 방법은 CAPACITY 와 _length 를 새로 정의하는것일 것이다.
+  기존 length 는 유명무실해 지지만 이해하기 쉽다.
+  length 속성을 인터페이스로 제공하면서 실재로는 _length 를 의미하도록 하려면, Proxy 를 쓰는 방법이 적절해보인다.
+  (처음에 getter 와 setter 매서드로 length 를 오버라이드 히려고 했엇는데 이미 인스턴스가 length 를 가지기에 이는 동작하지 않았다) */
   private readonly CAPACITY: number;
-  private LENGTH: number;
+  private _length: number;
 
   // Todo: 모호함을 제거하기위해, capacity 를 인자로 받는 생성만 허용하고 Items 를 인자로 받는 생성은 허용하지 말아야 할까?
   constructor(capacity: number);
@@ -17,7 +25,7 @@ export class OArray<T>
         capacity = args[0];
         args = new Array(capacity).fill(undefined);
       } else {
-        throw new Error('Capacity must be positive integer.');
+        throw new Error(`Capacity(${args[0]}) must be positive integer.`);
       }
     } else {
       capacity = args.length;
@@ -27,16 +35,17 @@ export class OArray<T>
     super(...args);
 
     this.CAPACITY = capacity;
-    this.LENGTH = length;
+    this._length = length;
 
     Object.defineProperty(this, 'CAPACITY', {
       writable: false,
-      configurable: false
+      enumerable: false,
     });
 
-    /* 원래 의도보다 더 확실한 역할을 하는 것 같다.
-    length 검사를 하기전에 capacity 를 벗어나는 삽입을 여기서 막는다.
-    따라서 push 의 오버라이드 매서드를 제거해도 array 수정 전에 에러를 던지고 있다. */
+    Object.defineProperty(this, '_length', {
+      enumerable: false,
+    });
+
     Object.seal(this);
 
     return new Proxy(this, {
@@ -45,14 +54,14 @@ export class OArray<T>
           const index = Number(prop);
           if (!Number.isNaN(index) || prop === 'NaN') {
             if (!isPositiveInteger(index)) {
-              throw new Error('Index must be positive integer.');
-            }
-            if (index >= target.LENGTH) {
-              throw new Error('Index out of bound.');
+              // index 에 음의 정수를 허용하지 않음으로써 전체적으로 더 단순해진다 (set: sealed)
+              throw new Error(`Index(${index}) must be positive integer.`);
+            } else if (index >= target._length) {
+              throw new Error(`Index(${index}) out of bound.`);
             }
           } else {
             if (prop === 'length') {
-              return target.LENGTH;
+              return target._length;
             }
           }
         }
@@ -63,13 +72,15 @@ export class OArray<T>
       set: (target, prop, value, receiver) => {
         // length 와 value 의 할당 부분은 기존 Array 매서드와의 호환성에 영향을 줄 수 있으므로 최대힌 적게 수정하는 방향으로 진행해야한다. 만약 수정해야한다면 호환성에 최대한 적게 영향을 주는 방향으로 진행해야한다.
         if (prop === 'length') {
-          // Todo: length 를 줄일때, 사용하지 않는 인덱스에 undefined 를 여기서 직접 할당해줘야할까? 그렇지 않으면 다시 length 를 늘렸을때 이전에 할당된 값이 남아있을텐데? 이것이 length 수정의 의도된 결과여도 되는가?
-          receiver.LENGTH = value;
+          // Todo: length 를 줄일때 또는 늘릴때, 사용하지 않는 인덱스에 undefined 를 여기서 직접 할당해줘야할까? 필요할까?
+          receiver._length = value;
           return true;
-        }
-
-        if (prop === 'LENGTH' && value > target.CAPACITY) {
-          throw new Error('Length must be less than capacity.');
+        } else if (prop === '_length') {
+          if (value > target.CAPACITY) {
+            throw new Error(`Length(${value}) must be less than capacity.`);
+          } else if (!isPositiveInteger(value)) {
+            throw new Error(`Length(${value}) must be positive integer.`);
+          }
         }
 
         // Todo: length 를 벗어나는 인덱스에 할당시에, 추후 해당 인덱스에 접근이 가능하도록 length 를 늘려주는것이 필요한가? 또는 length 를 벗어나는 할당을 막아야 할까?
@@ -83,19 +94,6 @@ export class OArray<T>
     return this.CAPACITY;
   }
 
-  /* Constructor 에서 this 의 프록시를 반환하게되면
-  클래스에서 오버라이딩한 length 의 getter, setter 를 호출하지 못하고
-  부모 클래스인 Array 의 length 프로퍼티로 가는 것 같다.
-    Todo: 이 부분에 대해서는 나중에 좀 더 봐야할 것같음.
-  일단은, LENGTH 반환, 할당은 프록시 에서 처리하자. */
-  public override get length(): number {
-    return this.LENGTH;
-  }
-
-  public override set length(value: number) {
-    this.LENGTH = value;
-  }
-
   /**
    * @param items New elements to add to the array.
    * @OArray Throws an error if the new length exceeds the capacity.
@@ -103,7 +101,7 @@ export class OArray<T>
   public override push(...items: T[]): number {
     /* 일종의 트랜젝션 처럼, 일관성을 위해서,
     Capacity 를 벗어나는 삽입 시도는 일부가 가능하더라도 전혀 삽입하지 않아야한다. */
-    if (this.LENGTH + items.length > this.CAPACITY) {
+    if (this._length + items.length > this.CAPACITY) {
       throw new Error('New length will exceed the capacity.');
     }
     return super.push(...items);
@@ -117,27 +115,95 @@ export class OArray<T>
     return super.unshift(...items);
   }
 
+  /* Array 의 메서드 중 삭제 관련 메서드의 오버라이드
+  pop, shilft => delete operator 를 이용한다. OArray 는 delete 를 허용하지 않는다.
+  splice => redefine 을 이용한다. OArray 에서는 redefine 을 허용하지 않는다. */
+
   /**
-   * @OArray Method not implemented.
+   * @param start The zero-based location in the array from which to start removing elements.
+   * @param deleteCount The number of elements to remove.
+   * @param items Elements to insert into the array in place of the deleted elements.
+   * @returns An array containing the elements that were deleted.
+   * @OArray Throws an error if the new length exceeds the capacity.
    */
-  public override fill(value: T, start?: number, end?: number): this;
-  public override fill(_value: T, _start: number, _end: number): this {
-    throw new Error('Method not implemented.');
+  public override splice(
+    start: number,
+    deleteCount: number = this._length - start,
+    ...items: T[]
+  ): T[] {
+    /* 삭제작업이 없는 경우는 기존 매서드 그대로 이용해도 무방함.
+    아래 주석처리된 코드를 살려도 옳바르게 동작함. 하지만 구현했으니 구현한것을 쓰자. */
+    // if (deleteCount === 0) {
+    //   return super.splice(start, deleteCount, ...items);
+    // }
+
+    const validDeleteCount = Math.min(deleteCount, this._length - start);
+    const newLength = this._length + items.length - validDeleteCount;
+    
+    if (this.CAPACITY < newLength) {
+      throw new Error('New length will exceed the capacity.');
+    }
+
+    // deleted elements
+    /* Todo: 이 작업을 아래 순회와 합치면 새로운길이 - start 만큼의 순회 한번으로 끝남.
+    지금처럼 따로하면 새로운길이 - start + delete 만큼의 순회를함. */
+    const result: T[] = [];
+    for (let i = 0; i < validDeleteCount; i++) {
+      (result[i] as T | undefined) = this[start + i];
+    }
+
+    const moveElementTo = (i: number) => {
+      (this[i] as T | undefined) = this[i + validDeleteCount - items.length];
+    };
+
+    // Move Elements Back Or Forward
+    if (items.length > validDeleteCount) { // 뒤로 밀어야 하는 경우
+      this.length = newLength; // 밀어야 한다면 밀기 전에 길이를 수정해야함
+      for (let i = newLength-1; start + items.length <= i; i--) { // 뒤에서부터
+        moveElementTo(i);
+      }
+    } else if (items.length < validDeleteCount) { // 앞으로 당겨야 하는 경우
+      for (let i = start + items.length; i < newLength; i++) { // 앞에서부터
+        moveElementTo(i);
+      }
+      this.length = newLength; // 당겨야 한다면 당긴 뒤에 길이를 수정해야함
+    }
+
+    // Inserting
+    for (let i = 0; i < items.length; i++) {
+      (this[start + i] as T | undefined) = items[i];
+    }
+
+    return result;
   }
 
   /**
-   * @OArray Method not implemented.
+   * @OArray Throws an error if array is empty.
    */
-  public override reverse(): T[] {
-    throw new Error('Method not implemented.');
+  public override pop(): T | undefined {
+    const result = this[this._length - 1]; // lenth 가 0 이면 여기에서 에러를 던짐
+    this.decreaseLength();
+    return result;
+  }
+
+  /**
+   * @OArray Throws an error if array is empty.
+   */
+  public override shift(): T | undefined {
+    const result = this[0]; // lenth 가 0 이면 여기에서 에러를 던짐
+    for (let i = 0; i < this.length-1; i++) {
+      (this[i] as T | undefined) = this[i + 1];
+    }
+    this.decreaseLength();
+    return result;
   }
 
   // private increaseLength(): number {
-  //   return ++this.LENGTH;
+  //   return ++this._length;
   // }
 
-  // private decreaseLength(): number {
-  //   return --this.LENGTH;
-  // }
+  private decreaseLength(): number {
+    return --this._length;
+  }
 
 }
