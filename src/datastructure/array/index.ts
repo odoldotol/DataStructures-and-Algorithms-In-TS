@@ -5,12 +5,11 @@ export class OArray<T>
 {
   /* 기존 JS Array 의 length 의 개념보다 더 좁은 의미의 length 개념 + Capacity 개념을 사용할 것이다.
   기존 length 를 변경할 때 일어나는 delete 작업 등등 은 피해야 한다.
-  Capacity 를 정의해야한다. (기존 length 를 CAPACITY 로 사용하는 방법도 있음)
+  Capacity 를 정의해야한다. (기존 length 를 CAPACITY 로 사용하는 방법도 가능할 것 같음)
   
-  가장 직관적인 방법은 CAPACITY 와 _length 를 새로 정의하는것일 것이다.
-  기존 length 는 유명무실해 지지만 이해하기 쉽다.
+  가장 안전하고 직관적인 방법은 CAPACITY 와 _length 를 새로 정의하는것일 것이다. 기존 length 는 유명무실해 지지만 이해하기 쉽다.
   length 속성을 인터페이스로 제공하면서 실재로는 _length 를 의미하도록 하려면, Proxy 를 쓰는 방법이 적절해보인다.
-  (처음에 getter 와 setter 매서드로 length 를 오버라이드 히려고 했엇는데 이미 인스턴스가 length 를 가지기에 이는 동작하지 않았다) */
+  (get, set 매서드로 length 를 오버라이드 하여도 length 를 우회할 수는 없다. 이미 인스턴스가 length 를 가지기에 프로토타입까지 안감.) */
   private readonly CAPACITY: number;
   private _length: number;
 
