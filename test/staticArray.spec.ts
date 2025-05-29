@@ -1,32 +1,32 @@
-import { OArray } from "src";
+import { StaticArray } from "src";
 
 const CAPACITY = 10;
 
-describe('OArray', () => {
+describe('StaticArray', () => {
 
   describe('생성', () => {
     it('Array 를 상속한다', () => {
-      expect(new OArray()).toBeInstanceOf(Array);
+      expect(new StaticArray()).toBeInstanceOf(Array);
     });
 
     describe('Capacity 로 생성', () => {
       it('Capacity 를 유일한 인자로 함', () => {
-        expect((new OArray(10)).capacity).toBe(10);
-        expect((new OArray(10, 10)).capacity).toBe(2);
+        expect((new StaticArray(10)).capacity).toBe(10);
+        expect((new StaticArray(10, 10)).capacity).toBe(2);
       });
 
       it('Capacity 는 양의 정수', () => {
-        expect(new OArray(0)).toBeDefined();
-        expect(new OArray(10)).toBeDefined();
-        expect(() => new OArray(-10)).toThrow();
-        expect(() => new OArray(10.5)).toThrow();
-        expect(() => new OArray(NaN)).toThrow();
+        expect(new StaticArray(0)).toBeDefined();
+        expect(new StaticArray(10)).toBeDefined();
+        expect(() => new StaticArray(-10)).toThrow();
+        expect(() => new StaticArray(10.5)).toThrow();
+        expect(() => new StaticArray(NaN)).toThrow();
       });
     });
 
     describe('...Items 로 생성', () => {
       it('...Items 를 인자로 함', () => {
-        const array = new OArray(1, 2, undefined, 4, 5);
+        const array = new StaticArray(1, 2, undefined, 4, 5);
         expect(array.capacity).toBe(5);
         expect(array).toHaveLength(5);
         expect(array[0]).toBe(1);
@@ -37,7 +37,7 @@ describe('OArray', () => {
       });
 
       it('하나의 string 타입 요소를 갖는 Items', () => {
-        const array = new OArray("10");
+        const array = new StaticArray("10");
         expect(array.capacity).toBe(1);
         expect(array).toHaveLength(1);
         expect(array[0]).toBe("10");
@@ -47,7 +47,7 @@ describe('OArray', () => {
 
   describe('Basic Spec', () => {
     describe('Capacity', () => {
-      const array = new OArray(CAPACITY);
+      const array = new StaticArray(CAPACITY);
 
       it('get', () => {
         expect(array.capacity).toBe(CAPACITY);
@@ -64,7 +64,7 @@ describe('OArray', () => {
     });
 
     describe('Length', () => {
-      const array = new OArray(CAPACITY);
+      const array = new StaticArray(CAPACITY);
 
       it('get', () => {
         expect(array.length).toBe(0);
@@ -99,7 +99,7 @@ describe('OArray', () => {
     describe('인덱스로 읽기', () => {
       const items = [1,2,3,4,5];
       const CAPACITY = items.length;
-      const array = new OArray(...items);
+      const array = new StaticArray(...items);
       array.length = CAPACITY -1;
 
       it('get', () => {
@@ -121,7 +121,7 @@ describe('OArray', () => {
     });
 
     describe('인덱스로 할당', () => {
-      const array = new OArray(CAPACITY);
+      const array = new StaticArray(CAPACITY);
       const value = 10;
 
       it('set', () => {
@@ -147,7 +147,7 @@ describe('OArray', () => {
     });
 
     describe("Iterable", () => {
-      const array = new OArray(CAPACITY);
+      const array = new StaticArray(CAPACITY);
       let iterator = array[Symbol.iterator]();
       it("Iterator", () => {
         expect(iterator).toBeDefined();
@@ -170,7 +170,7 @@ describe('OArray', () => {
 
   describe('Methods of Array', () => {
     describe('Mutating method', () => {
-      let array: OArray<string>;
+      let array: StaticArray<string>;
       const ogLength = CAPACITY - 4;
       const elementsLength = CAPACITY * 2;
       const elements = new Array<string>(elementsLength);
@@ -179,7 +179,7 @@ describe('OArray', () => {
       }
 
       beforeEach(() => {
-        array = new OArray(CAPACITY);
+        array = new StaticArray(CAPACITY);
         for (let i = 0; i < ogLength; i++) {
           array[i] = elements[i]!;
         }
