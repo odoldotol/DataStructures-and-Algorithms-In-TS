@@ -1,4 +1,4 @@
-import { StaticArray } from "src";
+import { StaticArray } from "src/staticArray";
 
 const CAPACITY = 10;
 

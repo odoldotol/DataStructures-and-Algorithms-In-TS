@@ -1,4 +1,4 @@
-import { reverse } from 'src';
+import { reverse } from 'src/function';
 
 describe('reverse', () => {
   it('should reverse the entire array', () => {
