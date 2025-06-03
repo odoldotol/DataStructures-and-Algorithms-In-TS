@@ -1,4 +1,4 @@
-import { intersection } from '../src/function';
+import { intersection } from 'src/function';
 
 describe('intersection', () => {
   it('should handle sets', () => {
