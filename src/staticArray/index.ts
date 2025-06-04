@@ -1,5 +1,8 @@
 import { isPositiveInteger } from 'src/utill'
 
+/**
+ * @todo [Warn] undefined 를 요소로 취급하지 않는것을 강제하기
+ */
 export class StaticArray<T>
   extends Array<T>
 {

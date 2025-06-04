@@ -1,0 +1,18 @@
+[V] 연결리스트자체도 이터러블이고 각 연결리스트노드도 이터러블.
+
+? 이터러블 제너레이터로 만드는 부분 괜찮은가?
+? 내장 이터러블들과 구현체, 프로토타입체인이나 [Symbol.toStringTag] 등등 좀 다름.
+
+[] 생성할때 이터러블로 생성이 가능해야한다 -> 링크드리스트일시엔 순환검사필요?
+
+[V] DoublyLinkedList 최소구현
+[] test 만들기
+[] 사용성, 필요성 검토 > 매서드 추가구현
+
+[] 자유편집이 가능한 느슨한 연결리스트 검토
+  ? 추상 최소 연결리스트 구현
+  ? length 와 tail 없이 노드를 꺼낼 수 있는 구현 & length 와 tail 있는 구현
+
+[] SinglyLinkedList
+[] SinglyCircularLinkedList
+[] DoublyCircularLinkedList
