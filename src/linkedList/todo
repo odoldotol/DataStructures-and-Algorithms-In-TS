@@ -11,7 +11,13 @@
 
 [] 자유편집이 가능한 느슨한 연결리스트 검토
   ? 추상 최소 연결리스트 구현
-  ? length 와 tail 없이 노드를 꺼낼 수 있는 구현 & length 와 tail 있는 구현
+  => 이를 상속받아서
+    - length 와 tail 없고 노드를 직접 다룰 수 있는 구현
+    - length 와 tail 있는 구현
+  
+[] Cycle 찾거나 감지
+[] 인터섹션 찾거나 감지
+[] reverse
 
 [] SinglyLinkedList
 [] SinglyCircularLinkedList

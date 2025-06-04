@@ -29,9 +29,10 @@ export class DoublyLinkedList<T>
   // public indexOf(item: T): number
   // public lastIndexOf(item: T): number
   // public set(index: number, item: T): void
+  // public removeFirstOccurrence(item: T): number
+  // public removeLastOccurrence(item: T): number
+  // public removeAll(item: T): number
   // public toArray(): T[]
-  // public removeFirstOccurrence(item: T): boolean
-  // public removeLastOccurrence(item: T): boolean
 
   /**
    * @throws RangeError if index is out of bounds
