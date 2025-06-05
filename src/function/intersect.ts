@@ -4,47 +4,47 @@ Todo - 2개 이상의 개체를 다루기
 - 개체의 총 갯수를 고려하여 가장 사이즈가 작은 개체, 큰 개체를 상황에 맞게 다뤄서 시간,공간적 효율성 고려하기
 */
 
-// export function intersection<T>(
+// export function intersect<T>(
 //   set: Set<T>,
 //   ...sets: Set<T>[]
 // ): Set<T>;
-// export function intersection<T>(
+// export function intersect<T>(
 //   array: T[],
 //   ...arrays: T[][],
 //   allowDuplicates?: boolean
 // ): T[];
-export function intersection<T>(
+export function intersect<T>(
   set1: Set<T>,
   set2: Set<T>,
 ): Set<T>;
-export function intersection<T>(
+export function intersect<T>(
   array1: T[],
   array2: T[],
   allowDuplicates?: boolean,
 ): T[];
-export function intersection<T>(
+export function intersect<T>(
   arg1: Set<T> | T[],
   arg2: Set<T> | T[],
   allowDuplicates: boolean = false,
 ): Set<T> | T[] {
   if (arg1 instanceof Set && arg2 instanceof Set) {
-    return intersectionSet(arg1, arg2);
+    return intersectSet(arg1, arg2);
   } else if (Array.isArray(arg1) && Array.isArray(arg2)) {
     if (allowDuplicates) {
-      return intersectionArrayAllowDuplicates(arg1, arg2);
+      return intersectArrayAllowDuplicates(arg1, arg2);
     } else {
-      return intersectionArray(arg1, arg2);
+      return intersectArray(arg1, arg2);
     }
   } else {
     throw new TypeError('Both arguments must be either Sets or Arrays of the same type.');
   }
 }
 
-// export function intersectionSet<T>(
+// export function intersectSet<T>(
 //   set: Set<T>,
 //   ...sets: Set<T>[]
 // ): Set<T>;
-function intersectionSet<T>(
+function intersectSet<T>(
   set1: Set<T>,
   set2: Set<T>,
 ): Set<T> {
@@ -63,11 +63,11 @@ function intersectionSet<T>(
   return result;
 }
 
-// export function intersectionArray<T>(
+// export function intersectArray<T>(
 //   array: T[],
 //   ...arrays: T[][]
 // ): T[];
-function intersectionArray<T>(
+function intersectArray<T>(
   array1: T[],
   array2: T[],
 ): T[] {
@@ -81,11 +81,11 @@ function intersectionArray<T>(
   return Array.from(set1).filter(item => set2.has(item));
 }
 
-// export function intersectionArray<T>(
+// export function intersectArray<T>(
 //   array: T[],
 //   ...arrays: T[][]
 // ): T[];
-function intersectionArrayAllowDuplicates<T>(
+function intersectArrayAllowDuplicates<T>(
   array1: T[],
   array2: T[],
 ): T[] {

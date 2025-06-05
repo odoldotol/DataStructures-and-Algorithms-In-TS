@@ -1,2 +1,2 @@
 export * from './reverse';
-export * from './intersection';
+export * from './intersect';
