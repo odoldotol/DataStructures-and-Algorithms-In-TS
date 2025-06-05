@@ -45,8 +45,15 @@ describe('intersection', () => {
     expect(result).toEqual(new Set([2, 3]));
 
     const array1 = [1, 2, 2, 3];
-    const array2 = [2, 3, 3, 4];
+    const array2 = [2, 2, 3, 3, 4];
     const resultArray = intersection(array1, array2);
     expect(resultArray).toEqual([2, 3]);
+  });
+
+  it('could allow duplicates in arrays', () => {
+    const array1 = [1, 2, 2, 3];
+    const array2 = [2, 2, 3, 3, 4];
+    const resultArray = intersection(array1, array2, true);
+    expect(resultArray).toEqual([2, 2, 3]);
   });
 });
