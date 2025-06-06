@@ -10,11 +10,11 @@
 
 ## Spec
 
-### StaticArray
+[StaticArray](./src/staticArray/staticArray.spec.ts)
 
-### DoublyLinkedList
+[DoublyLinkedList](./src/linkedList/doublyLinkedList.spec.ts)
 
-### intersection
+[intersect](./src/function/intersect.spec.ts)
 
-### reverse
+[reverse](./src/function/reverse.spec.ts)
 
