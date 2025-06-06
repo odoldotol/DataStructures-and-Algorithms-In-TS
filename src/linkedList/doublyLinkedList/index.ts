@@ -56,7 +56,7 @@ export class DoublyLinkedList<T>
   }
 
   /**
-   * This method is equivalent to `addAtHead`.
+   * This method is equivalent to `add`.
    */
   public addAtTail(item: T): void {
     const newNode = NodeFactory.createDoubly<T>(item);
