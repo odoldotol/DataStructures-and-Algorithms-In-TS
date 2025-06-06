@@ -245,7 +245,7 @@ export class DoublyLinkedList<T>
     return --this._length;
   }
 
-  private indexOutOfBounds(): Error {
+  private indexOutOfBounds(): RangeError {
     return new RangeError("Index out of bounds");
   }
 

@@ -14,6 +14,8 @@
 
 [DoublyLinkedList](./src/linkedList/doublyLinkedList.spec.ts)
 
+[Queue](./src/queue/queue.spec.ts)
+
 [intersect](./src/function/intersect.spec.ts)
 
 [reverse](./src/function/reverse.spec.ts)
