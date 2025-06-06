@@ -1,7 +1,7 @@
 import { isPositiveInteger } from 'src/utill'
 
 /**
- * @todo [Warn] undefined 를 요소로 취급하지 않는것을 강제하기
+ * @todo [Warn] undefined 를 요소로 취급하지 않는것을 강제하기?
  */
 export class StaticArray<T>
   extends Array<T>
@@ -86,6 +86,13 @@ export class StaticArray<T>
         }
 
         // Todo: length 를 벗어나는 인덱스에 할당시에, 추후 해당 인덱스에 접근이 가능하도록 length 를 늘려주는것이 필요한가? 또는 length 를 벗어나는 할당을 막아야 할까?
+        // 일단은 length 를 벗어나는 할당시에 length 를 늘려주는 것으로 진행한다.
+        const index = Number(prop);
+        if (isPositiveInteger(index)) {
+          if (index >= receiver._length) {
+            receiver._length = index + 1;
+          }
+        }
 
         return Reflect.set(target, prop, value, receiver);
       }
@@ -160,7 +167,7 @@ export class StaticArray<T>
 
     // Move Elements Back Or Forward
     if (items.length > validDeleteCount) { // 뒤로 밀어야 하는 경우
-      this.length = newLength; // 밀어야 한다면 밀기 전에 길이를 수정해야함
+      this.length = newLength; // 밀어야 한다면 밀기 전에 길이를 수정해야함 // 미리 수정하지 않아도 set 할때 수정되긴해. 주석처리해도 됨.
       for (let i = newLength-1; start + items.length <= i; i--) { // 뒤에서부터
         moveElementTo(i);
       }

@@ -98,9 +98,7 @@ describe('StaticArray', () => {
 
     describe('인덱스로 읽기', () => {
       const items = [1,2,3,4,5];
-      const CAPACITY = items.length;
       const array = new StaticArray(...items);
-      array.length = CAPACITY -1;
 
       it('get', () => {
         expect(array[2]).toBe(items[2]);
@@ -125,11 +123,13 @@ describe('StaticArray', () => {
       const value = 10;
 
       it('set', () => {
+        array[1] = value;
+        expect(array[1]).toBe(value);
+        expect(array).toHaveLength(2);
+
         array[CAPACITY-1] = value;
-        const ogLength = array.length;
-        array.length = CAPACITY;
         expect(array[CAPACITY-1]).toBe(value);
-        array.length = ogLength;
+        expect(array).toHaveLength(CAPACITY);
       });
 
       it('Capacity 를 벗어나는 인덱스로 할당할 수 없음', () => {
@@ -183,7 +183,6 @@ describe('StaticArray', () => {
         for (let i = 0; i < ogLength; i++) {
           array[i] = elements[i]!;
         }
-        array.length = ogLength;
       });
 
       describe('Inserting', () => {
