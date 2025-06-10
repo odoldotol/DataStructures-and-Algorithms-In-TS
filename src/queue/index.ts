@@ -7,6 +7,8 @@ export class Queue<T>
 
   constructor() {}
 
+  // peek(): T
+
   public get length(): number {
     return this.items.length;
   }

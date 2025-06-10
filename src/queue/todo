@@ -4,3 +4,4 @@ Array 기반 구현 (순환)
   [] DynamicQueue (좀 복잡해짐)
 
 [V] Linked List 기반 구현
+  [] StaticQueue, DynamicQueue 따로 필요할까?
