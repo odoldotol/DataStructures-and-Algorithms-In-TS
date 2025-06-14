@@ -28,6 +28,7 @@ describe("Stack", () => {
     expect(stack.pop()).toBe(2);
     expect(stack.pop()).toBe(1);
     expect(stack).toHaveLength(0);
+    expect(() => stack.pop()).toThrow(RangeError);
   });
 
   it("should throw an error when popping from an empty stack", () => {

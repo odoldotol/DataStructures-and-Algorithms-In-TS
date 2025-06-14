@@ -20,8 +20,11 @@ export class Stack<T>
     this.items.push(item);
   }
 
+  /**
+   * @throws {RangeError} if the stack is empty.
+   */
   public pop(): T {
-    if (this.items.length === 0) {
+    if (this.hasAny() === false) {
       throw new RangeError("Stack is empty");
     }
     return this.items.pop()!;
