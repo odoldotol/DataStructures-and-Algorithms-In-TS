@@ -10,7 +10,11 @@ export class BinarySearch<T> {
     private rightIndex: number,
     private readonly target: T,
     private readonly strategy: BinarySearchStrategy<T>,
-  ) {}
+  ) {
+    if (strategy.isTargetInLeftSide) {
+      this.isTargetInLeftSide = strategy.isTargetInLeftSide;
+    }
+  }
 
   private midIndex = NaN;
   private sequenceCount = 0;

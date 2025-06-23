@@ -85,5 +85,62 @@ describe('BinarySearch', () => {
       expect(result).toBe(pick);
     });
 
+    it('https://leetcode.com/explore/learn/card/binary-search/125/template-i/952/', () => {
+      const nums = [4,5,6,7,0,1,2];
+      const target = 0;
+      expect(search(nums, target)).toBe(4);
+
+      function search(
+        nums: number[],
+        target: number
+      ): number {
+        // const first = 0 번째 요소의 값;
+        // const last = length-1 번쨰 요소의 값;
+        // target 이 last 보다 같거나 작다면 후번부에 위치. last 보다 크다면 전면부에 위치.
+        // 마찬가지로 i 번째 요소의 값이 last 보다 같거나 작다면 i 는 후번부에 위치. last 보다 크다면 i 는 전면부에 위치.
+        // 이진탐색시 i 가 전면부에 위치하는지 후면부에 위치하는지 먼저 판단하고
+          // 타겟과 다른섹션이라면 바로 range 를 수정.
+          // 타겟과 같은섹션이라면 대소비교를 통해 range 를 수정.
+        
+        const first = nums[0]!;
+        const last = nums[nums.length - 1]!;
+        
+        const isRotated = first > last;
+
+        let result: number;
+        if (isRotated === false) {
+          result = BinarySearchFactory
+          .createOnArray(nums, target)
+          .run();
+        } else {
+          const isTargetInLastSection = target <= last;
+
+          result = BinarySearchFactory
+          .createBuilder(0, nums.length - 1, target)
+          .setStrategy({
+            makeIndexComparable: index => nums[index]!,
+            isTargetInLeftSide: comparable => {
+              const isComparableInLastSection = comparable <= last;
+              if (isComparableInLastSection === isTargetInLastSection) {
+                return target < comparable;
+              } else if (isTargetInLastSection === false) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          })
+          .build()
+          .run();
+        }
+
+        if (Number.isNaN(result)) {
+          return -1;
+        }
+
+        return result;
+      }
+    });
+
   });
 });

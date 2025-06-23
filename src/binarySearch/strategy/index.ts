@@ -20,6 +20,8 @@ export interface BinarySearchStrategy<T> {
 
   calculateMidIndex(leftIndex: number, rightIndex: number): number;
 
+  isTargetInLeftSide?(comparable: T): boolean;
+
 }
 
 export const createDefault = <T>(): BinarySearchStrategy<T> => ({
