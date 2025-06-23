@@ -10,13 +10,16 @@
 
 ## Spec
 
-[StaticArray](./src/staticArray/staticArray.spec.ts)
+[BinarySearch](./src/binarySearch/binarySearch.spec.ts)
 
-[DoublyLinkedList](./src/linkedList/doublyLinkedList.spec.ts)
+[Stack](./src/stack/stack.spec.ts)
 
 [Queue](./src/queue/queue.spec.ts)
+
+[DoublyLinkedList](./src/linkedList/doublyLinkedList.spec.ts)
 
 [intersect](./src/function/intersect.spec.ts)
 
 [reverse](./src/function/reverse.spec.ts)
 
+[StaticArray](./src/staticArray/staticArray.spec.ts)
