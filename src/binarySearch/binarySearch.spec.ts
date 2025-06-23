@@ -12,9 +12,19 @@ describe('BinarySearch', () => {
     it('https://leetcode.com/explore/learn/card/binary-search/138/background/1038/', () => {
       const nums = [-1,0,3,5,9,12];
       const target = 9;
-      const binarySearch = BinarySearchFactory.createOnArray(nums, target);
-      const result = binarySearch.run();
-      expect(result).toBe(4);
+      expect(search(nums, target)).toBe(4);
+
+      function search(nums: number[], target: number): number {
+        const result = BinarySearchFactory
+        .createOnArray(nums, target)
+        .run();
+
+        if (Number.isNaN(result)) {
+          return -1;
+        }
+        
+        return result;
+      }
     });
 
     it('https://leetcode.com/explore/learn/card/binary-search/125/template-i/950/', () => {
@@ -44,26 +54,52 @@ describe('BinarySearch', () => {
       };
 
       */
+
       const x = 4;
-      const binarySearch = BinarySearchFactory
-      .createBuilder(0, x, x)
-      .setStrategy({ makeIndexComparable: index => index * index })
-      .build();
+      expect(mySqrt(x)).toBe(2);
 
-      const result = binarySearch.run();
+      function mySqrt(x: number): number {
+        const binarySearch = BinarySearchFactory
+        .createBuilder(0, x, x)
+        .setStrategy({ makeIndexComparable: index => index * index })
+        .build();
 
-      if (Number.isNaN(result)) {
-        expect(binarySearch.getRightIndex()).toBe(2);
+        const result = binarySearch.run();
+
+        if (Number.isNaN(result)) {
+          return binarySearch.getRightIndex();
+        }
+
+        return result;
       }
-
-      expect(result).toBe(2);
     });
 
     it('https://leetcode.com/explore/learn/card/binary-search/125/template-i/951/', () => {
-      const n = 10;
       const pick = 6;
+      const n = 10;
 
-      const guess = (num: number): number => {
+      expect(guessNumber(n)).toBe(pick);
+
+      function guessNumber(n: number): number {
+        return BinarySearchFactory
+        .createBuilder(1, n, 0)
+        .setStrategy({
+          makeIndexComparable: guess,
+          compare: (leftOne, rightOne) => leftOne > rightOne,
+        })
+        .build()
+        .run();
+      }
+
+      /** 
+       * Forward declaration of guess API.
+       * @param {number} num   your guess
+       * @return 	     -1 if num is higher than the picked number
+       *			      1 if num is lower than the picked number
+       *               otherwise return 0
+       * var guess = function(num) {}
+       */
+      function guess(num: number): number {
         if (num === pick) {
           return 0;
         } else if (pick < num) {
@@ -71,18 +107,7 @@ describe('BinarySearch', () => {
         } else {
           return 1;
         }
-      };
-
-      const result = BinarySearchFactory
-      .createBuilder(1, n, 0)
-      .setStrategy({
-        makeIndexComparable: guess,
-        compare: (leftOne, rightOne) => leftOne > rightOne,
-      })
-      .build()
-      .run();
-
-      expect(result).toBe(pick);
+      }
     });
 
     it('https://leetcode.com/explore/learn/card/binary-search/125/template-i/952/', () => {
