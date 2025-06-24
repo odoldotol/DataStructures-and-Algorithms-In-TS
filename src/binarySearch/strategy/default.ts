@@ -4,6 +4,22 @@ export const makeIndexComparable = <T>(
   return index as T;
 };
 
+export const isTargetInLeftSide = <T>(
+  comparable: T,
+  target: T,
+  compareFn: (leftOne: T, rightOne: T) => boolean = compare,
+): boolean => {
+  return compareFn(target, comparable);
+};
+
+export const isTarget = <T>(
+  comparable: T,
+  target: T,
+  isEqualFn: (a: T, b: T) => boolean = isEqual,
+): boolean => {
+  return isEqualFn(comparable, target);
+};
+
 export const compare = <T>(
   leftOne: T,
   rightOne: T
@@ -16,11 +32,4 @@ export const isEqual = <T>(
   rightOne: T
 ): boolean => {
   return leftOne === rightOne;
-};
-
-export const calculateMidIndex = (
-  leftIndex: number,
-  rightIndex: number
-): number => {
-  return Math.floor(leftIndex + (rightIndex - leftIndex) / 2);
 };

@@ -1,17 +1,17 @@
-import { BinarySearch } from "./binarySearch";
+import { BinarySearch } from "./common";
 import {
   BinarySearchStrategyOptions,
-  createDefault
+  BinarySearchStrategyFactory,
 } from "./strategy";
+import { BinarySearchWithNoTarget } from "./withNoTarget";
+import { BinarySearchWithTarget } from "./withTarget";
 
 export class BinarySearchBuilder<T> {
 
   private leftIndex = NaN;
   private rightIndex = NaN;
-
   private target: T | undefined;
-
-  private readonly strategy = createDefault<T>();
+  private strategy: BinarySearchStrategyOptions<T> = {};
 
   public setLeftIndex(index: number): this {
     this.leftIndex = index;
@@ -42,16 +42,23 @@ export class BinarySearchBuilder<T> {
   public setStrategy(
     strategyOptions: BinarySearchStrategyOptions<T>
   ): this {
-    Object.assign(this.strategy, strategyOptions);
+    this.strategy = Object.assign(this.strategy, strategyOptions);
     return this;
   }
 
-  public build(): BinarySearch<T> {
-    return new BinarySearch<T>(
-      ...this.validateIndices(),
-      this.validateTarget(),
-      this.strategy
-    );
+  public build(): BinarySearch {
+    if (this.target === undefined) {
+      return new BinarySearchWithNoTarget<T>(
+        ...this.validateIndices(),
+        BinarySearchStrategyFactory.createWithNoTarget(this.strategy),
+      );
+    } else {
+      return new BinarySearchWithTarget<T>(
+        ...this.validateIndices(),
+        BinarySearchStrategyFactory.createWithTarget(this.strategy),
+        this.target,
+      );
+    }
   }
 
   private validateIndices(): [number, number] {
@@ -67,14 +74,6 @@ export class BinarySearchBuilder<T> {
     }
 
     return [this.leftIndex, this.rightIndex];
-  }
-
-  private validateTarget(): T {
-    if (this.target === undefined) {
-      throw new Error('Target is not set.');
-    }
-
-    return this.target;
   }
 
 }

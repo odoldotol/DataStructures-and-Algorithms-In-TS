@@ -17,13 +17,10 @@ describe('BinarySearch', () => {
       function search(nums: number[], target: number): number {
         const result = BinarySearchFactory
         .createOnArray(nums, target)
-        .run();
-
-        if (Number.isNaN(result)) {
-          return -1;
-        }
+        .run()
+        .getMidIndex();
         
-        return result;
+        return Number.isNaN(result) ? -1 : result;
       }
     });
 
@@ -62,15 +59,12 @@ describe('BinarySearch', () => {
         const binarySearch = BinarySearchFactory
         .createBuilder(0, x, x)
         .setStrategy({ makeIndexComparable: index => index * index })
-        .build();
+        .build()
+        .run();
 
-        const result = binarySearch.run();
+        const result = binarySearch.getMidIndex();
 
-        if (Number.isNaN(result)) {
-          return binarySearch.getRightIndex();
-        }
-
-        return result;
+        return Number.isNaN(result) ? binarySearch.getRightIndex() : result;
       }
     });
 
@@ -88,7 +82,8 @@ describe('BinarySearch', () => {
           compare: (leftOne, rightOne) => leftOne > rightOne,
         })
         .build()
-        .run();
+        .run()
+        .getMidIndex();
       }
 
       /** 
@@ -136,7 +131,8 @@ describe('BinarySearch', () => {
         if (isRotated === false) {
           result = BinarySearchFactory
           .createOnArray(nums, target)
-          .run();
+          .run()
+          .getMidIndex();
         } else {
           const isTargetInLastSection = target <= last;
 
@@ -144,10 +140,10 @@ describe('BinarySearch', () => {
           .createBuilder(0, nums.length - 1, target)
           .setStrategy({
             makeIndexComparable: index => nums[index]!,
-            isTargetInLeftSide: comparable => {
+            isTargetInLeftSide: (comparable, target, compareFn) => {
               const isComparableInLastSection = comparable <= last;
               if (isComparableInLastSection === isTargetInLastSection) {
-                return target < comparable;
+                return compareFn(target, comparable);
               } else if (isTargetInLastSection === false) {
                 return true;
               } else {
@@ -156,15 +152,31 @@ describe('BinarySearch', () => {
             }
           })
           .build()
-          .run();
+          .run()
+          .getMidIndex();
         }
 
-        if (Number.isNaN(result)) {
-          return -1;
-        }
-
-        return result;
+        return Number.isNaN(result) ? -1 : result;
       }
+    });
+
+    it('https://leetcode.com/explore/learn/card/binary-search/126/template-ii/947/', () => {
+      const n = 5;
+      const isBadVersion = (version: number): boolean => {
+        return version >= 4;
+      };
+
+      expect(solution(isBadVersion)(n)).toBe(4);
+
+      function solution(isBadVersion: any) {
+          return function(n: number): number {
+            return BinarySearchFactory
+            .createNoTargetBuilder(1, n, comparable => isBadVersion(comparable))
+            .build()
+            .run()
+            .getLeftIndex();
+          };
+      };
     });
 
   });
