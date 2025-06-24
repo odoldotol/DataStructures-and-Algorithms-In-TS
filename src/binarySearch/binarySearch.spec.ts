@@ -18,7 +18,7 @@ describe('BinarySearch', () => {
         const result = BinarySearchFactory
         .createOnArray(nums, target)
         .run()
-        .getMidIndex();
+        .getTargetIndex();
         
         return Number.isNaN(result) ? -1 : result;
       }
@@ -62,7 +62,7 @@ describe('BinarySearch', () => {
         .build()
         .run();
 
-        const result = binarySearch.getMidIndex();
+        const result = binarySearch.getTargetIndex();
 
         return Number.isNaN(result) ? binarySearch.getRightIndex() : result;
       }
@@ -83,7 +83,7 @@ describe('BinarySearch', () => {
         })
         .build()
         .run()
-        .getMidIndex();
+        .getTargetIndex();
       }
 
       /** 
@@ -132,7 +132,7 @@ describe('BinarySearch', () => {
           result = BinarySearchFactory
           .createOnArray(nums, target)
           .run()
-          .getMidIndex();
+          .getTargetIndex();
         } else {
           const isTargetInLastSection = target <= last;
 
@@ -153,7 +153,7 @@ describe('BinarySearch', () => {
           })
           .build()
           .run()
-          .getMidIndex();
+          .getTargetIndex();
         }
 
         return Number.isNaN(result) ? -1 : result;

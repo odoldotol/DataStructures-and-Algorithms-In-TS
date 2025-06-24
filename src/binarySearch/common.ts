@@ -3,6 +3,8 @@
  */
 export abstract class BinarySearch {
 
+  protected targetIndex = NaN;
+
   constructor(
     protected leftIndex: number,
     protected rightIndex: number,
@@ -10,6 +12,10 @@ export abstract class BinarySearch {
 
   protected midIndex = NaN;
   protected sequenceCount = 0;
+
+  public getTargetIndex(): number {
+    return this.targetIndex;
+  }
 
   public getLeftIndex(): number {
     return this.leftIndex;

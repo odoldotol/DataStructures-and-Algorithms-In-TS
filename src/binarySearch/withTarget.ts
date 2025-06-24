@@ -26,6 +26,7 @@ export class BinarySearchWithTarget<T>
       if (this.strategy.isTargetInLeftSide(comparable, this.target, this.strategy.compare)) {
         this.rightIndex = this.midIndex - 1; // Core 커스텀?
       } else if (this.strategy.isTarget(comparable, this.target, this.strategy.isEqual)) {
+        this.targetIndex = this.midIndex;
         return this;
       } else {
         this.leftIndex = this.midIndex + 1; // Core 커스텀?
