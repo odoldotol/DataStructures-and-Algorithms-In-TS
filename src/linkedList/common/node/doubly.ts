@@ -3,8 +3,8 @@ import { SinglyLinkedListNode } from "./singly";
 export class DoublyLinkedListNode<T>
   extends SinglyLinkedListNode<T>
 {
-  protected override _next: DoublyLinkedListNode<T> | null;
-  private _prev: DoublyLinkedListNode<T> | null;
+  protected override next: DoublyLinkedListNode<T> | null;
+  private prev: DoublyLinkedListNode<T> | null;
 
   constructor(
     value: T,
@@ -12,30 +12,30 @@ export class DoublyLinkedListNode<T>
     prevNode: DoublyLinkedListNode<T> | null = null
   ) {
     super(value, nextNode);
-    this._next = nextNode;
-    this._prev = prevNode;
+    this.next = nextNode;
+    this.prev = prevNode;
   }
 
-  public override get next(): DoublyLinkedListNode<T> | null {
-    return this._next;
+  public override getNext(): DoublyLinkedListNode<T> | null {
+    return this.next;
   }
 
-  public override set next(nextNode: DoublyLinkedListNode<T> | null) {
-    this._next = nextNode;
+  public override setNext(nextNode: DoublyLinkedListNode<T> | null): void {
+    this.next = nextNode;
   }
 
-  public get prev(): DoublyLinkedListNode<T> | null {
-    return this._prev;
+  public getPrev(): DoublyLinkedListNode<T> | null {
+    return this.prev;
   }
 
-  public set prev(prevNode: DoublyLinkedListNode<T> | null) {
-    this._prev = prevNode;
+  public setPrev(prevNode: DoublyLinkedListNode<T> | null): void {
+    this.prev = prevNode;
   }
 
   public *descendingIterator(): IterableIterator<T> {
     let currentNode: DoublyLinkedListNode<T> | null = this;
     while (currentNode !== null) {
-      yield currentNode.value;
+      yield currentNode.getValue();
       currentNode = currentNode.prev;
     }
   }

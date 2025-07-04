@@ -38,15 +38,15 @@ export class DoublyLinkedList<T>
    * @throws RangeError if index is out of bounds
    */
   public get(index: number): T {
-    return this.getNode(index).value;
+    return this.getNode(index).getValue();
   }
 
   public addAtHead(item: T): void {
     const newNode = NodeFactory.createDoubly<T>(item);
 
     if (this.head !== null) {
-      newNode.next = this.head;
-      this.head.prev = newNode;
+      newNode.setNext(this.head);
+      this.head.setPrev(newNode);
     } else {
       this.tail = newNode;
     }
@@ -62,8 +62,8 @@ export class DoublyLinkedList<T>
     const newNode = NodeFactory.createDoubly<T>(item);
 
     if (this.tail !== null) {
-      newNode.prev = this.tail;
-      this.tail.next = newNode;
+      newNode.setPrev(this.tail);
+      this.tail.setNext(newNode);
     } else {
       this.head = newNode;
     }
@@ -93,15 +93,15 @@ export class DoublyLinkedList<T>
     } else if (index > 0 && index < this._length) {
       const pre = this.getNode(index - 1);
       const newNode = NodeFactory.createDoubly<T>(item);
-      const next = pre.next;
+      const next = pre.getNext();
 
       if (next !== null) {
-        newNode.next = next;
-        next.prev = newNode;
+        newNode.setNext(next);
+        next.setPrev(newNode);
       }
 
-      pre.next = newNode;
-      newNode.prev = pre;
+      pre.setNext(newNode);
+      newNode.setPrev(pre);
       this.increaseLength();
     } else {
       throw this.indexOutOfBounds();
@@ -119,17 +119,17 @@ export class DoublyLinkedList<T>
     this.decreaseLength();
 
     const removedNode = this.head;
-    this.head = this.head.next;
+    this.head = this.head.getNext();
 
     if (this.head !== null) {
-      this.head.prev = null;
+      this.head.setPrev(null);
     }
 
     if (this.tail === removedNode) {
       this.tail = null;
     }
 
-    return removedNode.value;
+    return removedNode.getValue();
   }
 
   /**
@@ -143,17 +143,17 @@ export class DoublyLinkedList<T>
     this.decreaseLength();
 
     const removedNode = this.tail;
-    this.tail = this.tail.prev;
+    this.tail = this.tail.getPrev();
 
     if (this.tail !== null) {
-      this.tail.next = null;
+      this.tail.setNext(null);
     }
 
     if (this.head === removedNode) {
       this.head = null;
     }
 
-    return removedNode.value;
+    return removedNode.getValue();
   }
 
   public removeAtIndex(index: number): void {
@@ -164,15 +164,15 @@ export class DoublyLinkedList<T>
     } else if (index > 0 && index < this._length - 1) {
       const removedNode = this.getNode(index);
       this.decreaseLength();
-      const prev = removedNode.prev;
-      const next = removedNode.next;
+      const prev = removedNode.getPrev();
+      const next = removedNode.getNext();
 
       if (prev !== null) {
-        prev.next = next;
+        prev.setNext(next);
       }
 
       if (next !== null) {
-        next.prev = prev;
+        next.setPrev(prev);
       }
     } else {
       throw this.indexOutOfBounds();
