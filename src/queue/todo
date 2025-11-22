@@ -1,7 +1,7 @@
 Array 기반 구현 (순환)
   ? Linked List 기반과 비교해서 의미가 있나 싶음.
-  [] StaticQueue
-  [] DynamicQueue (좀 복잡해짐)
+  [] StaticQueue -> 고정길이 할당해두고 로테이트하면서 이용.
+  [] DynamicQueue -> StaticQueue 에서 꽉차면 추가할당할 수도 있겠지만 복잡성증가. 처음부터 다이나믹어레이로 구현하면 배치작업으로 쉬프트 해줘야하나? 어쨋든 일반화하기엔 과하게 복잡해.
 
 [V] Linked List 기반 구현
   [] StaticQueue, DynamicQueue 따로 필요할까?
