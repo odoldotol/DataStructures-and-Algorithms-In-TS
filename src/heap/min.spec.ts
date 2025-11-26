@@ -4,12 +4,18 @@ describe("MinHeap", () => {
   let minHeap: Heap<number>;
 
   beforeEach(() => {
-    minHeap = Heap.min<number>();
+    minHeap = Heap.min();
   });
 
   it("should initialize with an empty heap", () => {
     expect(minHeap.size()).toBe(0);
     expect(minHeap.isEmpty()).toBe(true);
+  });
+
+  it("should initialize with elements", () => {
+    minHeap = Heap.min([5, 3, 8, 1]);
+    expect(minHeap.size()).toBe(4);
+    expect(minHeap.peek()).toBe(1);
   });
 
   it("should add elements and maintain heap property", () => {

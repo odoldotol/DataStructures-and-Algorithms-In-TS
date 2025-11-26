@@ -4,12 +4,18 @@ describe("MaxHeap", () => {
   let maxHeap: Heap<number>;
 
   beforeEach(() => {
-    maxHeap = Heap.max<number>();
+    maxHeap = Heap.max();
   });
 
   it("should initialize with an empty heap", () => {
     expect(maxHeap.size()).toBe(0);
     expect(maxHeap.isEmpty()).toBe(true);
+  });
+
+  it("should initialize with elements", () => {
+    maxHeap = Heap.max([5, 3, 8, 1]);
+    expect(maxHeap.size()).toBe(4);
+    expect(maxHeap.peek()).toBe(8);
   });
 
   it("should add elements and maintain heap property", () => {

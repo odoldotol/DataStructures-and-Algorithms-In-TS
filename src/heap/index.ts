@@ -28,6 +28,10 @@ export class Heap<T> extends CompleteBinaryTreeArray<T> {
     array: T[] = [],
   ) {
     super(array);
+    
+    for (let i = Math.floor(this.treeSize / 2 - 1); i >= 0; i--) {
+      this.heapify(i);
+    }
   }
 
   public override add(value: T): number {
@@ -58,24 +62,8 @@ export class Heap<T> extends CompleteBinaryTreeArray<T> {
     this.treeArr[idx] = this.treeArr[this.treeSize - 1]!;
     this.treeSize--;
     this.treeArr.length--;
-    while (idx < this.treeSize / 2) {
-      let leftChildIdx = this.getLeftChildIndex(idx);
-      let rightChildIdx = leftChildIdx + 1;
-      if (
-        this.comparator(this.treeArr[leftChildIdx]!, this.treeArr[idx]!) < 0
-        || this.comparator(this.treeArr[rightChildIdx]! /* @Todo - undefined 일 수 있음? 어차피 false 될테니 괜찮음. 하지만 좋지않아. */, this.treeArr[idx]!) < 0
-      ) {
-        if (this.comparator(this.treeArr[leftChildIdx]!, this.treeArr[rightChildIdx]!) < 0) {
-          [this.treeArr[leftChildIdx]!, this.treeArr[idx]!] = [this.treeArr[idx]!, this.treeArr[leftChildIdx]!];
-          idx = leftChildIdx;
-        } else {
-          [this.treeArr[rightChildIdx]!, this.treeArr[idx]!] = [this.treeArr[idx]!, this.treeArr[rightChildIdx]!];
-          idx = rightChildIdx;
-        }
-      } else {
-        break;
-      }
-    }
+
+    this.heapify(idx);
     
     return result;
   }
@@ -86,5 +74,26 @@ export class Heap<T> extends CompleteBinaryTreeArray<T> {
     this.treeSize = this.treeArr.length;
 
     return this.treeArr;
+  }
+
+  private heapify(index: number): void {
+    while (index < this.treeSize / 2) {
+      let leftChildIdx = this.getLeftChildIndex(index);
+      let rightChildIdx = leftChildIdx < this.treeSize - 1 ? leftChildIdx + 1 : null;
+      if (
+        this.comparator(this.treeArr[leftChildIdx]!, this.treeArr[index]!) < 0
+        || (rightChildIdx !== null && this.comparator(this.treeArr[rightChildIdx]!, this.treeArr[index]!) < 0)
+      ) {
+        if (rightChildIdx === null || this.comparator(this.treeArr[leftChildIdx]!, this.treeArr[rightChildIdx]!) < 0) {
+          [this.treeArr[leftChildIdx]!, this.treeArr[index]!] = [this.treeArr[index]!, this.treeArr[leftChildIdx]!];
+          index = leftChildIdx;
+        } else {
+          [this.treeArr[rightChildIdx]!, this.treeArr[index]!] = [this.treeArr[index]!, this.treeArr[rightChildIdx]!];
+          index = rightChildIdx;
+        }
+      } else {
+        break;
+      }
+    }
   }
 }
