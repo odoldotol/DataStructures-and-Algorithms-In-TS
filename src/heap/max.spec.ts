@@ -1,10 +1,10 @@
-import { MaxHeap } from "src/heap/max";
+import { Heap } from "src/heap";
 
 describe("MaxHeap", () => {
-  let maxHeap: MaxHeap<number>;
+  let maxHeap: Heap<number>;
 
   beforeEach(() => {
-    maxHeap = new MaxHeap<number>();
+    maxHeap = Heap.max<number>();
   });
 
   it("should initialize with an empty heap", () => {

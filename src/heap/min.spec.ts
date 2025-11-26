@@ -1,10 +1,10 @@
-import { MinHeap } from "src/heap/min";
+import { Heap } from "src/heap";
 
 describe("MinHeap", () => {
-  let minHeap: MinHeap<number>;
+  let minHeap: Heap<number>;
 
   beforeEach(() => {
-    minHeap = new MinHeap<number>();
+    minHeap = Heap.min<number>();
   });
 
   it("should initialize with an empty heap", () => {

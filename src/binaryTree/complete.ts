@@ -4,10 +4,20 @@
  * @Todo index 는 positive integer 만 들어온다고 가정하고 있음. 위험함.
  */
 export class CompleteBinaryTreeArray<T> {
-  protected tree = Array<T>(1); // tree[0] empty
+  protected treeArr: T[];
+  protected treeSize: number;
+
+  constructor();
+  constructor(array: T[]);
+  constructor(
+    array: T[] = []
+  ) {
+    this.treeArr = array;
+    this.treeSize = array.length;
+  }
 
   public size(): number {
-    return this.tree.length - 1;
+    return this.treeSize;
   }
 
   public isEmpty(): boolean {
@@ -19,36 +29,36 @@ export class CompleteBinaryTreeArray<T> {
    * @returns size
    */
   public add(value: T): number {
-    return this.tree.push(value) - 1;
+    this.treeArr[this.treeSize] = value;
+    return ++this.treeSize;
   }
 
   public peek(): T | null {
-    return this.tree[1] ?? null;
+    return this.treeArr[0] ?? null;
   }
 
   /**
    * return 0 if root
    */
   protected getParentIndex(index: number): number {
-    return Math.floor(index / 2);
+    return Math.floor((index - 1) / 2);
   }
 
   /**
    * 사이즈 검사 안함
    */
   protected getLeftChildIndex(index: number): number {
-    return index * 2;
+    return index * 2 + 1;
   }
 
   /**
    * 사이즈 검사 안함
    */
   protected getRightChildIndex(index: number): number {
-    return this.getLeftChildIndex(index) + 1;
+    return index * 2 + 2;
   }
 
   protected isLeaf(index: number): boolean {
-    return this.getParentIndex(this.size()) < index;
-    // return this.getLeftChildIndex(index) > this.size();
+    return this.getLeftChildIndex(index) >= this.size();
   }
 }
