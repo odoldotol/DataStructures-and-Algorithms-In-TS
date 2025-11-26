@@ -68,16 +68,8 @@ export class Heap<T> extends CompleteBinaryTreeArray<T> {
     return result;
   }
 
-  public sort(): T[] {
-    // @Todo - 구현
-
-    this.treeSize = this.treeArr.length;
-
-    return this.treeArr;
-  }
-
-  private heapify(index: number): void {
-    while (index < this.treeSize / 2) {
+  protected heapify(index: number): void {
+    while (index < Math.floor(this.treeSize / 2)) {
       let leftChildIdx = this.getLeftChildIndex(index);
       let rightChildIdx = leftChildIdx < this.treeSize - 1 ? leftChildIdx + 1 : null;
       if (

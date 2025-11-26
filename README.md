@@ -15,7 +15,9 @@ Leet 코드 기반 학습을 진행하면서 최소한의 유용성을 갖춘 TS
 
 ## Spec
 
-[Heap]
+[heapSort](./src/function/heapSort.spec.ts)
+
+[Heap](./src/heap/)
 
 [BinaryTree]
 
