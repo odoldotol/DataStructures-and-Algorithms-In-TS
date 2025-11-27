@@ -1,20 +1,26 @@
 # Leet Code
 
-Array
+Array - - -
 
-String
+String - - - -
+  2D Array
+  Two Pointers
 
-Linked List
+Linked List - -
+  Two Pointers
 
-Hash Table
+Hash Table - -
 
-Queue, Stack
+Queue, Stack - -
+  Queue and BFS
+  Stack and DFS
 
-Binary Search
+Binary Search - -
 
-Binary Tree
+Binary Tree - -
 
-Heap(*)
+Heap -
+  Heap Sort
 
 Recursion 1
 
@@ -22,10 +28,9 @@ Binary Search Tree, Trie, N-ary Tree
 
 Recursion 2
 
-Dynamic Programming(*)
+Dynamic Programming
 
-Graph(*)
-
+Graph
 
 ---
 
