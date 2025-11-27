@@ -1,4 +1,4 @@
-import { Heap } from "src/heap";
+import { Heap } from "./heap";
 
 describe("MaxHeap", () => {
   let maxHeap: Heap<number>;
