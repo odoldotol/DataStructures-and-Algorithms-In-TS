@@ -21,4 +21,4 @@
 // Size K Heap 을 이용
 // O(NlogK) / O(K)
 
-export * from './heap';
+export * from './heapQueue';

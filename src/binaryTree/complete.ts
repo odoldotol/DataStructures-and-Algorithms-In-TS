@@ -3,7 +3,7 @@
  * 추가만 가능 \
  * @Todo index 는 positive integer 만 들어온다고 가정하고 있음. 위험함.
  */
-export class CompleteBinaryTreeArray<T> {
+export class CompleteBinaryTree<T> {
   protected treeArr: T[];
   protected treeSize: number;
 

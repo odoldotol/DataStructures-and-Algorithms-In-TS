@@ -1,12 +1,12 @@
-// @Todo - heap.spec.ts 작성하고 제거
+// @Todo - heapQueue.spec.ts 작성하고 제거
 
-import { Heap } from "./heap";
+import { HeapQueue } from "./heapQueue";
 
 describe("MaxHeap", () => {
-  let maxHeap: Heap<number>;
+  let maxHeap: HeapQueue<number>;
 
   beforeEach(() => {
-    maxHeap = Heap.max();
+    maxHeap = HeapQueue.max();
   });
 
   it("should initialize with an empty heap", () => {
@@ -15,7 +15,7 @@ describe("MaxHeap", () => {
   });
 
   it("should initialize with elements", () => {
-    maxHeap = Heap.max([5, 3, 8, 1]);
+    maxHeap = HeapQueue.max([5, 3, 8, 1]);
     expect(maxHeap.size()).toBe(4);
     expect(maxHeap.peek()).toBe(8);
   });

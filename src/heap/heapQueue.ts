@@ -1,14 +1,14 @@
-import { CompleteBinaryTreeArray } from "src/binaryTree";
+import { CompleteBinaryTree } from "src/binaryTree";
 import { Comparator, maxHeapComparator, minHeapComparator } from "./comparator";
 
-export class Heap<T> extends CompleteBinaryTreeArray<T> {
+export class HeapQueue<T> extends CompleteBinaryTree<T> {
 
-  public static max<T>(array: T[] = []): Heap<T> {
-    return new Heap(maxHeapComparator, array);
+  public static max<T>(array: T[] = []): HeapQueue<T> {
+    return new HeapQueue(maxHeapComparator, array);
   }
 
-  public static min<T>(array: T[] = []): Heap<T> {
-    return new Heap(minHeapComparator, array);
+  public static min<T>(array: T[] = []): HeapQueue<T> {
+    return new HeapQueue(minHeapComparator, array);
   }
 
   private readonly comparator: Comparator<T>;

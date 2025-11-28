@@ -1,12 +1,12 @@
-// @Todo - heap.spec.ts 작성하고 제거
+// @Todo - heapQueue.spec.ts 작성하고 제거
 
-import { Heap } from "./heap";
+import { HeapQueue } from "./heapQueue";
 
 describe("MinHeap", () => {
-  let minHeap: Heap<number>;
+  let minHeap: HeapQueue<number>;
 
   beforeEach(() => {
-    minHeap = Heap.min();
+    minHeap = HeapQueue.min();
   });
 
   it("should initialize with an empty heap", () => {
@@ -15,7 +15,7 @@ describe("MinHeap", () => {
   });
 
   it("should initialize with elements", () => {
-    minHeap = Heap.min([5, 3, 8, 1]);
+    minHeap = HeapQueue.min([5, 3, 8, 1]);
     expect(minHeap.size()).toBe(4);
     expect(minHeap.peek()).toBe(1);
   });

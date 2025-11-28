@@ -1,4 +1,4 @@
-import { Heap } from "src/heap";
+import { HeapQueue } from "src/heap";
 import { Comparator, minHeapComparator } from "src/heap/comparator";
 
 export function heapSort<T>(array: T[]): T[];
@@ -23,7 +23,7 @@ export function heapSort<T>(arg1: Comparator<T> | T[], arg2?: T[]): T[] {
   return array;
 }
 
-class HeapSort<T> extends Heap<T> {
+class HeapSort<T> extends HeapQueue<T> {
   constructor(array: T[], comparator: Comparator<T> = minHeapComparator) {
     super(
       (a, b) => comparator(b, a), // 역순 comparator 필요

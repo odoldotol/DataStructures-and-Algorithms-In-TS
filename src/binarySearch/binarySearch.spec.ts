@@ -3,11 +3,6 @@ import { BinarySearchFactory } from "./factory";
 describe('BinarySearch', () => {
 
   describe('LeetCode', () => {
-    /*
-    LeetCode binary-search card 를 학습하며 각 예제들을 케이스로 일반화 진행함.
-    각 예제들을 이 구현체로 해결했을때 성능상 유의미한 패널티가 없도록 함.
-    이슈는 각 케이스에 기록.
-    */
 
     it('https://leetcode.com/explore/learn/card/binary-search/138/background/1038/', () => {
       const nums = [-1,0,3,5,9,12];
